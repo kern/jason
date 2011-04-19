@@ -1,0 +1,1 @@
+JasonApp::Application.config.secret_token = '5ddfeaf6267d5da9a3409c06628538253d49c742d72b512724abc93a89df4f37ae8dc9bafaeb4ebd0b40be6eb13ca47e4bcaedbf423ed8c6774d61de1abe51eb'

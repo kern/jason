@@ -1,0 +1,1 @@
+Bare-bones Rails 3 application for testing Marble.
