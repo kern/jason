@@ -1,1 +1,1 @@
-Bare-bones Rails 3 application for testing Marble.
+Bare-bones Rails 3 application for testing Jason.

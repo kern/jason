@@ -2,6 +2,7 @@ require 'erb'
 require 'json'
 require 'yaml'
 
+# Renders and compiles Jason templates.
 module Jason
   # Render a template.
   # 
