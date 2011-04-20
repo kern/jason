@@ -1,0 +1,5 @@
+require 'bundler/setup'
+
+Autotest.add_hook :initialize do |at|
+  at.testlib = 'minitest/unit'
+end

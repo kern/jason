@@ -1,0 +1,2 @@
+instance: <%= @instance_var %>
+local: <%= local_var %>

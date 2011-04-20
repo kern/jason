@@ -1,0 +1,1 @@
+JasonApp::Application.config.session_store :cookie_store, :key => '_jason_app_session'
