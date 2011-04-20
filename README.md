@@ -35,8 +35,8 @@ Name your view template with the extension `jason`. Everything else is the same.
     foo: bar
     baz:
       <% unless @we_started_the_fire %>
-        - quz
-        - quuz
+      - quz
+      - quuz
       <% end %>
     
     # Renders: {"foo": "bar", "baz": ["quz", "quuz"]}
