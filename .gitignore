@@ -17,3 +17,6 @@ InstalledFiles
 .yardoc
 _yardoc
 doc/
+
+# Gem-specific
+Gemfile.lock
