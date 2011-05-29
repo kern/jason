@@ -1,32 +1,41 @@
 require 'test_helper'
 
 class TestJason < MiniTest::Unit::TestCase
-  def test_render_without_binding
+  test '#render without binding' do
     template = <<-EOF
       foo: bar
       baz:
-        - quz
+        % if true
+          - quz
         - quuz
     EOF
     
-    assert_equal({'foo' => 'bar', 'baz' => ['quz', 'quuz']}, JSON.parse(Jason.render(template)))
+    assert_equal({'foo' => 'bar', 'baz' => ['quz', 'quuz']}, JSON.load(Jason.render(template)))
   end
   
-  def test_render_with_binding
+  test '#render with binding' do
     test_string = 'bar'
     template = <<-EOF
       foo: <%= test_string %>
     EOF
     
-    assert_equal({'foo' => 'bar' }, JSON.parse(Jason.render(template, binding)))
+    assert_equal({'foo' => 'bar' }, JSON.load(Jason.render(template, binding)))
   end
   
-  def test_compile
+  test '#compile' do
     test_string = 'bar'
     template = <<-EOF
       foo: <%= test_string %>
     EOF
     
-    assert_equal({'foo' => 'bar' }, JSON.parse(eval(Jason.compile(template))))
+    assert_equal({'foo' => 'bar' }, JSON.load(eval(Jason.compile(template))))
   end
 end
+
+puts Jason.render(<<-EOS
+test:
+  % if true
+    - foo
+  - bar
+EOS
+)

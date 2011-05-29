@@ -6,24 +6,28 @@ There's no easy way to create JSON templates in Ruby.
 
 ## Solution ##
 
-Use YAML and ERb to make the simplest thing that could possibly work.
+Use YAML and Ember to make the simplest thing that could possibly work.
 
 ## Installation ##
 
-Without bundler:
-
     gem install jason
-
-With bundler:
-
-    gem 'jason'
 
 ## Usage ##
 
-You write jason templates in plain YAML and ERb. Jason will take care of the
-(ultra-simple) conversion to JSON.
+You write jason templates in plain YAML and Ember. Jason will take care of the
+(ultra-simple) conversion to JSON. You can use the Ember shorthand syntax, leave
+off the `end` of blocks, and use natural indentation, since Ember will
+automatically unindent blocks for you.
 
-    Jason.render("foo: bar") # => '{"foo": "bar"}'
+    Jason.render('foo: bar') # => '{"foo":"bar"}'
+    
+    Jason.render(<<-EOS
+    test:
+      % if true
+        - foo
+      - bar
+    EOS
+    ) # => '{"test":["foo","bar"]}'
 
 That's it.
 
@@ -34,12 +38,11 @@ Name your view template with the extension `jason`. Everything else is the same.
     # in view_name.jason
     foo: bar
     baz:
-      <% unless @we_started_the_fire %>
-      - quz
-      - quuz
-      <% end %>
+      % unless @we_started_the_fire
+        - quz
+        - quuz
     
-    # Renders: {"foo": "bar", "baz": ["quz", "quuz"]}
+    # Renders: {"foo":"bar","baz":["quz","quuz"]}
 
 ## Note on Patches/Pull Requests ##
 

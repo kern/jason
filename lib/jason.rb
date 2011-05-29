@@ -1,4 +1,4 @@
-require 'erb'
+require 'ember'
 require 'json'
 require 'yaml'
 
@@ -13,7 +13,12 @@ module Jason
   # @param [Binding] binding the binding to render the template in
   # @return [String] the rendered template
   def self.render(template, binding = nil)
-    yaml = ERB.new(template).result(binding)
+    if binding
+      yaml = ember_template(template).render(binding)
+    else
+      yaml = ember_template(template).render
+    end
+    
     YAML::load(yaml).to_json
   end
   
@@ -24,7 +29,16 @@ module Jason
   # @param [String] template the template to compile
   # @return [String] the compiled template
   def self.compile(template)
-    "#{ERB.new(template).src}; YAML::load(_erbout).to_json"
+    "YAML::load(#{ember_template(template).program}).to_json"
+  end
+  
+  private
+  
+  def self.ember_template(template)
+    Ember::Template.new(template,
+      :unindent => true,
+      :infer_end => true,:shorthand => true
+    )
   end
 end
 
