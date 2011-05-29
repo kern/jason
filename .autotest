@@ -1,9 +1,0 @@
-require 'bundler/setup'
-
-Autotest.add_hook :initialize do |at|
-  at.testlib = 'minitest/unit'
-  
-  %w{test/rails}.each do |exception|
-    at.add_exception(exception)
-  end
-end
