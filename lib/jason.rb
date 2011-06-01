@@ -32,6 +32,13 @@ module Jason
     "#{eruby_template(template).src}; Jason.process(_buf)"
   end
   
+  # Process a rendered buffer.
+  # 
+  # Removes any trailing commas and compresses the buffer.
+  # 
+  # Usually, you should not have to call this method.
+  # 
+  # @param [String] buffer
   def self.process(buffer)
     JSON.load(remove_trailing_commas(buffer)).to_json
   end
@@ -42,6 +49,9 @@ module Jason
     JSONEruby.new(template)
   end
   
+  # Based upon the string scanner found in jnunemaker's crack.
+  # 
+  # @see https://github.com/jnunemaker/crack crack
   def self.remove_trailing_commas(json)
     comma_position = nil
     quoting = nil
