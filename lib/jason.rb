@@ -1,6 +1,6 @@
-require 'ember'
+require 'erubis'
 require 'json'
-require 'yaml'
+require 'strscan'
 
 # Renders and compiles Jason templates.
 module Jason
@@ -14,12 +14,12 @@ module Jason
   # @return [String] the rendered template
   def self.render(template, binding = nil)
     if binding
-      yaml = ember_template(template).render(binding)
+      yaml = eruby_template(template).result(binding)
     else
-      yaml = ember_template(template).render
+      yaml = eruby_template(template).result
     end
     
-    YAML::load(yaml).to_json
+    process(yaml)
   end
   
   # Compile a template.
@@ -29,20 +29,49 @@ module Jason
   # @param [String] template the template to compile
   # @return [String] the compiled template
   def self.compile(template)
-    "YAML::load(#{ember_template(template).program}).to_json"
+    "#{eruby_template(template).src}; Jason.process(_buf)"
+  end
+  
+  def self.process(buffer)
+    JSON.load(remove_trailing_commas(buffer)).to_json
   end
   
   private
   
-  def self.ember_template(template)
-    Ember::Template.new(template,
-      :unindent => true,
-      :infer_end => true,:shorthand => true
-    )
+  def self.eruby_template(template)
+    JSONEruby.new(template)
+  end
+  
+  def self.remove_trailing_commas(json)
+    comma_position = nil
+    quoting = nil
+    scanner = StringScanner.new(json)
+    
+    while scanner.scan_until(/(\\['"]|['",\]\}])/)
+      case char = scanner[1]
+      when '"', "'"
+        if !quoting
+          quoting = char
+        elsif quoting == char
+          quoting = nil
+        end
+      when ']', '}'
+        if comma_position && json[comma_position + 1...scanner.pos - 1] =~ /^\s*$/
+          json[comma_position] = ''
+          scanner.pos -= 1
+          comma_position = nil
+        end
+      when ','
+        comma_position = scanner.pos - 1 unless quoting
+      end
+    end
+    
+    json
   end
 end
 
 require 'jason/version'
+require 'jason/json_eruby'
 
 if defined? ActionView::Template
   require 'jason/rails_template_handler'

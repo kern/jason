@@ -1,8 +1,8 @@
 PATH
   remote: ../../
   specs:
-    jason (0.1.0)
-      ember
+    jason (0.2.0)
+      erubis
 
 GEM
   remote: http://rubygems.org/
@@ -37,7 +37,6 @@ GEM
     ansi (1.2.5)
     arel (2.0.10)
     builder (2.1.2)
-    ember (0.3.1)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     i18n (0.5.0)
