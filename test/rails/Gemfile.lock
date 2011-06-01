@@ -1,7 +1,7 @@
 PATH
   remote: ../../
   specs:
-    jason (0.2.0)
+    jason (0.3.0)
       erubis
 
 GEM
