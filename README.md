@@ -6,7 +6,7 @@ There's no easy way to create JSON templates in Ruby.
 
 ## Solution ##
 
-Use YAML and Ember to make the simplest thing that could possibly work.
+Use Erubis to make the simplest thing that could possibly work.
 
 ## Installation ##
 
@@ -14,20 +14,30 @@ Use YAML and Ember to make the simplest thing that could possibly work.
 
 ## Usage ##
 
-You write jason templates in plain YAML and Ember. Jason will take care of the
-(ultra-simple) conversion to JSON. You can use the Ember shorthand syntax, leave
-off the `end` of blocks, and use natural indentation, since Ember will
-automatically unindent blocks for you.
+You write jason templates in a fashion similar to regular old JSON with a
+notable exception: trailing commas in arrays and objects are automatically
+removed. This allows you to easily create JSON templates using iterators.
 
-    Jason.render('foo: bar') # => '{"foo":"bar"}'
+    Jason.render('{ "foo": "bar" }') # => '{"foo":"bar"}'
     
     Jason.render(<<-EOS
-    test:
-      % if true
-        - foo
-      - bar
+    {
+      "test": [
+        <% if true %>
+          "foo",
+        <% end %>
+        "bar", <%# Notice how this trailing comma is perfectly valid. %>
+      ]
+    }
     EOS
     ) # => '{"test":["foo","bar"]}'
+
+Jason also redefines the `<%= expr %>` Erubis delimiter so that it converts the
+expression to a JSON value by calling `#to_json` on the expression. If you'd
+like to use regular interpolation, use the `<%== expr %>` delimiter instead.
+
+    Jason.render('<%= 'test' %>') # => '"test"'
+    Jason.render('"<%== 'test' %>"') # => '"test"'
 
 That's it.
 
@@ -36,11 +46,15 @@ That's it.
 Name your view template with the extension `jason`. Everything else is the same.
 
     # in view_name.jason
-    foo: bar
-    baz:
-      % unless @we_started_the_fire
-        - quz
-        - quuz
+    {
+      "foo": "bar",
+      "baz": [
+        <% unless @we_started_the_fire %>
+          "quz",
+          "quuz",
+        <% end %>
+      ]
+    }
     
     # Renders: {"foo":"bar","baz":["quz","quuz"]}
 
