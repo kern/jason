@@ -3,18 +3,46 @@ require 'test_helper'
 class TestJason < MiniTest::Unit::TestCase
   test '.render without binding' do
     template = <<-EOF
-      {
-        "foo": "bar",
-        "baz": [
-          <% if true %>
-            "quz",
-          <% end %>
-          "quuz",
+{
+  "message": "OK",
+  "user": {
+    "id": <%= 'test' %>,
+    "name": <%= 'blah' %>,
+    <% if true %>
+      "link": [
+        <% if true %>
+          {
+            "rel": "self",
+            "href": <%= 'hablaba' %>
+          },
+        <% end %>
+        {
+          "rel": "checkins",
+          "href": <%= 'hablaba' %>
+        }
+      ]
+    <% end %>
+  }
+}
+EOF
+    
+    assert_equal({
+      'message' => 'OK',
+      'user' => {
+        'id' => 'test',
+        'name' => 'blah',
+        'link' => [
+          {
+            'rel' => 'self',
+            'href' => 'hablaba'
+          },
+          {
+            'rel' => 'checkins',
+            'href' => 'hablaba'
+          }
         ]
       }
-    EOF
-    
-    assert_equal({ 'foo' => 'bar', 'baz' => ['quz', 'quuz'] }, JSON.load(Jason.render(template)))
+    }, JSON.load(Jason.render(template)))
   end
   
   test '.render with binding' do

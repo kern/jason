@@ -53,6 +53,7 @@ module Jason
   # 
   # @see https://github.com/jnunemaker/crack crack
   def self.remove_trailing_commas(json)
+    json = json.dup
     comma_position = nil
     quoting = nil
     scanner = StringScanner.new(json)
@@ -66,7 +67,7 @@ module Jason
           quoting = nil
         end
       when ']', '}'
-        if comma_position && json[comma_position + 1...scanner.pos - 1] =~ /^\s*$/
+        if comma_position && json[comma_position + 1...scanner.pos - 1] =~ /\A\s*\z/
           json[comma_position] = ''
           scanner.pos -= 1
           comma_position = nil
