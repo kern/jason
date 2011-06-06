@@ -39,7 +39,13 @@ like to use regular interpolation, use the `<%== expr %>` delimiter instead.
     Jason.render('<%= 'test' %>') # => '"test"'
     Jason.render('"<%== 'test' %>"') # => '"test"'
 
-That's it.
+You can configure the output format of the JSON:
+
+    Jason.output_format = :compact # This is the default.
+    Jason.output_format = :pretty
+
+`:compact` will remove any unnecessary whitespace in the JSON while `:pretty`
+will indent the result JSON so that it looks, well, pretty.
 
 ## Usage with Rails ##
 
