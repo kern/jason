@@ -85,4 +85,8 @@ EOF
     assert_equal :pretty, Jason.output_format
     assert_equal "{\n  \"foo\": [\n    \"bar\"\n  ]\n}", Jason.process('{"foo":["bar"]}')
   end
+  
+  def teardown
+    Jason.output_format = :compact
+  end
 end
