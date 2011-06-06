@@ -76,4 +76,13 @@ EOF
     
     assert_equal({ 'foo' => 'bar', 'baz' => ['quz', 'quuz'] }, JSON.load(Jason.process(template)))
   end
+  
+  test '.output_format' do
+    assert_equal :compact, Jason.output_format
+    assert_equal '{"foo":["bar"]}', Jason.process('{"foo":["bar"]}')
+    
+    Jason.output_format = :pretty
+    assert_equal :pretty, Jason.output_format
+    assert_equal "{\n  \"foo\": [\n    \"bar\"\n  ]\n}", Jason.process('{"foo":["bar"]}')
+  end
 end

@@ -4,6 +4,20 @@ require 'strscan'
 
 # Renders and compiles Jason templates.
 module Jason
+  class << self
+    attr_writer :output_format
+    
+    # The output format of the JSON.
+    # 
+    # I suggest using `:pretty` for development and testing and `:compact` for
+    # production.
+    # 
+    # @returns [:pretty, :compact]
+    def output_format
+      @output_format ||= :compact
+    end
+  end
+  
   # Render a template.
   # 
   # @example
@@ -40,7 +54,13 @@ module Jason
   # 
   # @param [String] buffer
   def self.process(buffer)
-    JSON.load(remove_trailing_commas(buffer)).to_json
+    obj = JSON.load(remove_trailing_commas(buffer))
+    
+    if output_format == :pretty
+      JSON.pretty_generate(obj)
+    else
+      JSON.generate(obj)
+    end
   end
   
   private
