@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ['alex@kernul.com']
   s.homepage    = 'https://github.com/CapnKernul/jason'
   s.summary     = %q{Insanely simple JSON templates}
-  s.description = %q{Create JSON templates using YAML and Ember}
+  s.description = %q{Create JSON templates using Erubis}
   
   s.rubyforge_project = 'jason'
   
