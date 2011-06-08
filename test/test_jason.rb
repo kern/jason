@@ -86,7 +86,18 @@ EOF
     assert_equal "{\n  \"foo\": [\n    \"bar\"\n  ]\n}", Jason.process('{"foo":["bar"]}')
   end
   
+  test '.output_listeners' do
+    assert_equal [], Jason.output_listeners
+    
+    listener = mock
+    listener.expects(:call).with('{"foo":["bar"]}')
+    Jason.output_listeners << listener
+    
+    Jason.process('{"foo":["bar"]}')
+  end
+  
   def teardown
     Jason.output_format = :compact
+    Jason.output_listeners = []
   end
 end

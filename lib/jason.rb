@@ -6,6 +6,7 @@ require 'strscan'
 module Jason
   class << self
     attr_writer :output_format
+    attr_writer :output_listeners
     
     # The output format of the JSON.
     # 
@@ -15,6 +16,18 @@ module Jason
     # @returns [:pretty, :compact]
     def output_format
       @output_format ||= :compact
+    end
+    
+    # The output listeners for jason.
+    # 
+    # All objects in this array are sent #call with the generated JSON whenever
+    # jason processes a buffer. This can be useful for logging output like so:
+    # 
+    #     Jason.output_listeners << lambda { |json| Rails.logger.info(json) }
+    # 
+    # @returns [<#call>]
+    def output_listeners
+      @output_listeners ||= []
     end
   end
   
@@ -48,19 +61,24 @@ module Jason
   
   # Process a rendered buffer.
   # 
-  # Removes any trailing commas and compresses the buffer.
+  # Removes any trailing commas and compresses the buffer. After generating the
+  # JSON, it calls each one of the output listeners with the generated JSON.
   # 
-  # Usually, you should not have to call this method.
+  # You should not have to directly call this method.
   # 
   # @param [String] buffer
   def self.process(buffer)
     obj = JSON.load(remove_trailing_commas(buffer))
     
     if output_format == :pretty
-      JSON.pretty_generate(obj)
+      json = JSON.pretty_generate(obj)
     else
-      JSON.generate(obj)
+      json = JSON.generate(obj)
     end
+    
+    output_listeners.each { |listener| listener.call(json) }
+    
+    json
   end
   
   private

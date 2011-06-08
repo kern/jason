@@ -47,6 +47,12 @@ You can configure the output format of the JSON:
 `:compact` will remove any unnecessary whitespace in the JSON while `:pretty`
 will indent the result JSON so that it looks, well, pretty.
 
+You can add output listeners to jason so that you can run arbitrary code upon
+the generated JSON. For example, if you'd like to log all of the JSON responses
+in Rails:
+
+    Jason.output_listeners << lambda { |json| Rails.logger.info(json) }
+
 ## Usage with Rails ##
 
 Name your view template with the extension `jason`. Everything else is the same.
