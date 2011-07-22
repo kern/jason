@@ -76,7 +76,7 @@ module Jason
       json = JSON.generate(obj)
     end
     
-    output_listeners.each { |listener| listener.call(json) }
+    output_listeners.each { |listener| listener.call(obj) }
     
     json
   end

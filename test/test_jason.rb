@@ -90,7 +90,7 @@ EOF
     assert_equal [], Jason.output_listeners
     
     listener = mock
-    listener.expects(:call).with('{"foo":["bar"]}')
+    listener.expects(:call).with({"foo" => ["bar"]})
     Jason.output_listeners << listener
     
     Jason.process('{"foo":["bar"]}')

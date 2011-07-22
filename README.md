@@ -51,7 +51,10 @@ You can add output listeners to jason so that you can run arbitrary code upon
 the generated JSON. For example, if you'd like to log all of the JSON responses
 in Rails:
 
-    Jason.output_listeners << lambda { |json| Rails.logger.info(json) }
+    Jason.output_listeners << lambda do |hash|
+      Rails.logger.info("[Jason] Generated output:\n#{JSON.pretty_generate(hash)}")
+    end
+    
 
 ## Usage with Rails ##
 
